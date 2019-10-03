@@ -1,5 +1,16 @@
 # Basic git commands
 
+1. [Identifying yourself to git](#1.-identifying-yourself-to-git)
+2. [Creating a git repo](#2.-creating-a-git-repo)
+3. [Files to Track and Initial Commit](#3.-files-to-track-and-initial-commit)
+4. [Recovering from Committed Mistakes](#4.-recovering-from-committed-mistakes)
+5. [Recovering from Uncommitted Mistakes](#5.-recovering-from-uncommitted-mistakes)
+6. [Branch Related Commands](#6.-branch-related-commands)
+7. [Github Push](#7.-github-push)
+8. [Miscellaneous Commands](#8.-miscellaneous-commands)
+9. [Version Controlling Terminology](#9.-version-controlling-terminology)
+
+
 ### 1. Identifying yourself to git
 
 ```
@@ -8,6 +19,7 @@ $ git config --global user.mail "yourmail@example.com"
 ```
 
 This is going to be the committer ID (author) in the output of "git log"
+
 ### 2. Creating a git repo
 
 1. Change into working directory of your project which you are planning to do version controlling.
@@ -30,9 +42,9 @@ $ git status  # shows the files to be ignored or to be staged
 $ git commit  -m "Initial Commit"
 ```
 
-### 4. Recovering from Commit Mistakes
+### 4. Recovering from Committed Mistakes
 
-Change some file and stage (git add filename) it to be committed, then commit.
+For instance, change some file and stage (git add filename) it to be committed, then commit.
 
 ```
 $ git add lines_deleted_some_code.py
@@ -139,11 +151,13 @@ After the last command, you will be asked for your account credentials.
 
 - To see differences between commits; first, see the commit number in the output of:
 
+```
 $ git log --oneline
 b8e791f (HEAD -> master) newline test
 75d522c added some more
 38726ed (origin/master) added some lines
 d55f940 Initial Commit
+```
 
 Then take the commit number which you want to compare. Differences show that the lines beginning with minus sign(-) are
 removed and the ones with plus sign(+) are added:
@@ -191,5 +205,14 @@ $ git log --graph --oneline --all
 * d55f940 Initial Commit
 ```
 
+### 9. Version Controlling Terminology
 
+**Term** | **Description**
+--- | ---
+**revert/rollback** | _discard changes and return to one of previous commit_
+**push/export** | _send changes from one repo (usually the local one) to another_
+**pull/import** | _update (local) working set with remote repo_
+**tag/label** | _name a specific state of a repository_
+**branch/fork** | _make a clone of a repository_
+**merge** | _integrate a branch (clone) back into the master repo (main branch)_
 

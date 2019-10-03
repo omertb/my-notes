@@ -128,3 +128,9 @@ git remote add origin https://github.com/*your-github-username*/__test.git__
 git push -u origin master
 ```
 After the last command, you will be asked for your account credentials.
+
+### 8. Miscellaneous Commands
+
+1. To see differences between commits first, see the commit number in the output of:
+
+$ git log --oneline

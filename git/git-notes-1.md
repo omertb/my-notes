@@ -10,7 +10,7 @@
 8. [Miscellaneous Commands](#8-miscellaneous-commands)
 9. [Version Controlling Terminology](#9-version-controlling-terminology)
 
-
+----
 ### 1. Identifying yourself to git
 
 ```
@@ -20,7 +20,7 @@ $ git config --global user.mail "yourmail@example.com"
 
 This is going to be the committer ID (author) in the output of "git log"
 
-
+----
 ### 2. Creating a git repo
 
 1. Change into working directory of your project which you are planning to do version controlling.
@@ -32,7 +32,7 @@ $ cd /var/www/html
 $ git init
 ```
 
-
+----
 ### 3. Files to Track and Initial Commit
 
 1. First, add the whole directory to be tracked.
@@ -45,7 +45,7 @@ $ git status  # shows the files to be ignored or to be staged
 $ git commit  -m "Initial Commit"
 ```
 
-
+----
 ### 4. Recovering from Committed Mistakes
 
 For instance, change some file and stage (git add filename) it to be committed, then commit.
@@ -72,7 +72,7 @@ a611eb2 (HEAD) Revert "deleted a line accidentally test"
 ec6102e deleted a line accidentally test
 ```
 
-
+----
 ### 5. Recovering from Uncommitted Mistakes
 
 To see changes since last commit till that moment:
@@ -83,7 +83,7 @@ And if there is a need to revoke all changes and revert to last commit:
 
 `$ git reset HEAD --hard`
 
-
+----
 ### 6. Branch Related Commands
 
 ###### 1. See branches before clone(fork)
@@ -140,7 +140,7 @@ $ git branch -d new_feature_branch
 Deleted branch new_feature_branch (was e872c7b).
 ```
 
-
+----
 ### 7. Github Push
 
 First, create a repository on your github account, for instance say it "*test*".
@@ -152,7 +152,7 @@ git push -u origin master
 ```
 After the last command, you will be asked for your account credentials.
 
-
+----
 ### 8. Miscellaneous Commands
 
 - ###### To see differences between commits; first, see the commit number in the output of:
@@ -211,7 +211,7 @@ $ git log --graph --oneline --all
 * d55f940 Initial Commit
 ```
 
-
+----
 ### 9. Version Controlling Terminology
 
 **Term** | **Description**

@@ -68,13 +68,13 @@ And if there is a need to revoke all changes and revert to last commit:
 
 ### 6. Branch Related Commands
 
-See branches before clone(fork)
+_1. See branches before clone(fork)_
 ```
 $ git branch
 * master
 ```
 
-To create a new_feature_branch from master repo and see the branches after the branch command:
+_2. To create a new_feature_branch from master repo and see the branches after the branch command:_
 ```
 $ git branch new_feature_branch
 
@@ -82,9 +82,10 @@ $ git branch
 * master
   new_feature_branch
 ```
+
 The preceding asterisk sign above shows that the master branch is active.
 
-To activate the branch with name new_feature_branch:
+_3. To activate the branch with name new_feature_branch:_
 ```
 $ git checkout new_feature_branch
 
@@ -95,7 +96,10 @@ $ git branch
 * new_feature_branch
 ```
 
-Since new_feature_branch is activated, any change made after that moment will not effect the master branch. After the changes made in that branch and if it is sure to update the master with these changes: the commands to be used are:
+Since new_feature_branch is activated, any change made after that moment will not effect the master branch.
+
+_4. After the changes made in that branch and if it is sure to update the master with these changes;
+the commands to be used are:_
 
 ```
 $ git checkout master
@@ -111,7 +115,9 @@ Fast-forward
  test.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
-Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:
+
+_5. Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:_
+
 ```
 $ git branch -d new_feature_branch
 Deleted branch new_feature_branch (was e872c7b).
@@ -131,7 +137,7 @@ After the last command, you will be asked for your account credentials.
 
 ### 8. Miscellaneous Commands
 
-- To see differences between commits first, see the commit number in the output of:
+- To see differences between commits; first, see the commit number in the output of:
 
 $ git log --oneline
 b8e791f (HEAD -> master) newline test
@@ -171,9 +177,19 @@ git diff HEAD
 
 - How to see branching with graph-like console output:
 
+```
+$ git log --graph --oneline --all
+*   c374357 (HEAD -> master) fixed conflicts
+|\  
+| * d7f9e2c (new_doc_branch) a line is added in new_doc_branch for test
+* | 53e8ea5 added some new items in master
+|/  
+* a916785 some new misc commands
+* b8e791f newline test
+* 75d522c added some more
+* 38726ed (origin/master) added some lines
+* d55f940 Initial Commit
+```
 
 
-- added some new items in master
-
-- this item added in  new_doc_branch
 

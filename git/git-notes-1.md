@@ -1,14 +1,14 @@
 # Basic git commands
 
-1. [Identifying yourself to git](#1.-identifying-yourself-to-git)
-2. [Creating a git repo](#2.-creating-a-git-repo)
-3. [Files to Track and Initial Commit](#3.-files-to-track-and-initial-commit)
-4. [Recovering from Committed Mistakes](#4.-recovering-from-committed-mistakes)
-5. [Recovering from Uncommitted Mistakes](#5.-recovering-from-uncommitted-mistakes)
-6. [Branch Related Commands](#6.-branch-related-commands)
-7. [Github Push](#7.-github-push)
-8. [Miscellaneous Commands](#8.-miscellaneous-commands)
-9. [Version Controlling Terminology](#9.-version-controlling-terminology)
+1. [Identifying yourself to git](#1-identifying-yourself-to-git)
+2. [Creating a git repo](#2-creating-a-git-repo)
+3. [Files to Track and Initial Commit](#3-files-to-track-and-initial-commit)
+4. [Recovering from Committed Mistakes](#4-recovering-from-committed-mistakes)
+5. [Recovering from Uncommitted Mistakes](#5-recovering-from-uncommitted-mistakes)
+6. [Branch Related Commands](#6-branch-related-commands)
+7. [Github Push](#7-github-push)
+8. [Miscellaneous Commands](#8-miscellaneous-commands)
+9. [Version Controlling Terminology](#9-version-controlling-terminology)
 
 
 ### 1. Identifying yourself to git

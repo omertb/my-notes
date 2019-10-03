@@ -172,4 +172,8 @@ git diff HEAD
 - How to see branching with graph-like console output:
 
 
+
 - added some new items in master
+
+- this item added in  new_doc_branch
+

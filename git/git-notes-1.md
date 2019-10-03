@@ -86,13 +86,13 @@ And if there is a need to revoke all changes and revert to last commit:
 
 ### 6. Branch Related Commands
 
-###### _**1. See branches before clone(fork)**_
+###### 1. See branches before clone(fork)
 ```
 $ git branch
 * master
 ```
 
-###### _**2. To create a new_feature_branch from master repo and see the branches after the branch command:**_
+###### 2. To create a new_feature_branch from master repo and see the branches after the branch command:
 ```
 $ git branch new_feature_branch
 
@@ -101,9 +101,9 @@ $ git branch
   new_feature_branch
 ```
 
-The preceding asterisk sign above shows that the master branch is active.
+> The preceding asterisk sign above shows that the master branch is active.
 
-**_3. To activate the branch with name new_feature_branch:_**
+###### 3. To activate the branch with name new_feature_branch:
 ```
 $ git checkout new_feature_branch
 
@@ -114,9 +114,9 @@ $ git branch
 * new_feature_branch
 ```
 
-Since new_feature_branch is activated, any change made after that moment will not effect the master branch.
+> Since new_feature_branch is activated, any change made after that moment will not effect the master branch.
 
-##### **_4. After the changes made in that branch and if it is sure to update the master with these changes; the commands to be used are:_**
+###### 4. After the changes made in that branch and if it is sure to update the master with these changes; the commands to be used are:
 
 ```
 $ git checkout master
@@ -133,7 +133,7 @@ Fast-forward
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-#### _5. Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:_
+###### 5. Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:
 
 ```
 $ git branch -d new_feature_branch
@@ -155,7 +155,7 @@ After the last command, you will be asked for your account credentials.
 
 ### 8. Miscellaneous Commands
 
-- To see differences between commits; first, see the commit number in the output of:
+- ###### To see differences between commits; first, see the commit number in the output of:
 
 ```
 $ git log --oneline
@@ -165,9 +165,8 @@ b8e791f (HEAD -> master) newline test
 d55f940 Initial Commit
 ```
 
-Then note down the commit numbers which you want to compare. Differences between those commits are shown belows.
-The output tells that the lines beginning with minus sign(-) are
-removed and the ones with plus sign(+) are added:
+Then note down the commit numbers which you want to compare. Differences between those commits are shown below.
+> The output tells that the lines beginning with minus sign(-) are removed and the ones with plus sign(+) are added:
 
 ```
 $ git diff 38726ed b8e791f
@@ -190,13 +189,13 @@ index 1c38d1d..0e9c4b0 100644
 +$ git log --oneline
 ```
 
-- What is changed since last commit:
+- ###### What is changed since last commit:
 
 ```
 git diff HEAD
 ```
 
-- How to see branching with graph-like console output:
+- ###### How to see branching with graph-like console output:
 
 ```
 $ git log --graph --oneline --all

@@ -45,7 +45,7 @@ $ git status  # shows the files to be ignored or to be staged
 $ git commit  -m "Initial Commit"
 ```
 
-----
+#
 ### 4. Recovering from Committed Mistakes
 
 For instance, change some file and stage (git add filename) it to be committed, then commit.

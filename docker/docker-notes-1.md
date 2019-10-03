@@ -80,7 +80,7 @@ $ docker build -t eg_sshd .
 $ docker run --rm -ti --name server ubuntu bash
 $ docker run --rm --ti --link server --name client ubuntu bash
 ```
-If you check the content of /etc/hosts in the container ***server***, there will be seen an entry for client container.
+If you check the content of /etc/hosts in the container ***server***, there will be seen an entry for the container ***client***.
 > These types of links break when the containers exit.
 
 #

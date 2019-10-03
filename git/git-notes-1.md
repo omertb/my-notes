@@ -210,6 +210,29 @@ $ git log --graph --oneline --all
 * 38726ed (origin/master) added some lines
 * d55f940 Initial Commit
 ```
+#
+- ###### If your remote repo is ahead of your local repo since you had changed and updated somewhere else.
+  - ###### Now you pulled it to your usual git repo which is left behind of your remote repo with `git pull origin master` 
+  - ###### And this is obvious in the output of `git log --oneline --all`:
+
+```
+* 32a4d5e (origin/master) Update git-notes-1.md
+* 722f0ec Update git-notes-1.md
+* 42237a3 (HEAD -> master) some more formatting
+* 0833522 some more formatting
+* 42ab3a6 some more formatting
+```
+> ###### So, take the commit number of remote repo (origin/master) and make a branch out of it. After that merge it to master.
+```
+$ git branch tmp 32a4d5e
+$ git merge tmp
+$ git log --oneline
+32a4d5e (HEAD -> master, origin/master, tmp) Update git-notes-1.md
+722f0ec Update git-notes-1.md
+42237a3 some more formatting
+0833522 some more formatting
+```
+> ###### Everything is right now!
 
 ----
 ### 9. Version Controlling Terminology

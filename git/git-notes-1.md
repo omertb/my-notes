@@ -45,7 +45,7 @@ $ git status  # shows the files to be ignored or to be staged
 $ git commit  -m "Initial Commit"
 ```
 
-#
+----
 ### 4. Recovering from Committed Mistakes
 
 For instance, change some file and stage (git add filename) it to be committed, then commit.
@@ -133,7 +133,7 @@ Fast-forward
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-###### 5. Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:
+###### 5. Now that master is updated and new_feature_branch is not needed; unnecessary branch can be deleted:
 
 ```
 $ git branch -d new_feature_branch
@@ -188,13 +188,13 @@ index 1c38d1d..0e9c4b0 100644
 +
 +$ git log --oneline
 ```
-
+#
 - ###### What is changed since last commit:
 
 ```
 git diff HEAD
 ```
-
+#
 - ###### How to see branching with graph-like console output:
 
 ```

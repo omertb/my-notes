@@ -116,3 +116,15 @@ Now that master is updated and new_feature_branch is not needed; to delete this 
 $ git branch -d new_feature_branch
 Deleted branch new_feature_branch (was e872c7b).
 ```
+
+
+### 7. Github Push
+
+First, create a repository on your github account, for instance say it "*test*".
+Then, on your terminal go to your git initiated project directory and issue these commands:
+
+```
+git remote add origin https://github.com/*your-github-username*/__test.git__
+git push -u origin master
+```
+After the last command, you will be asked for your account credentials.

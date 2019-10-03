@@ -116,8 +116,7 @@ $ git branch
 
 Since new_feature_branch is activated, any change made after that moment will not effect the master branch.
 
-_4. After the changes made in that branch and if it is sure to update the master with these changes;
-the commands to be used are:_
+##### **_4. After the changes made in that branch and if it is sure to update the master with these changes; the commands to be used are:_**
 
 ```
 $ git checkout master
@@ -134,7 +133,7 @@ Fast-forward
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-_5. Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:_
+#### _5. Now that master is updated and new_feature_branch is not needed; to delete this unnecessary branch:_
 
 ```
 $ git branch -d new_feature_branch

@@ -131,6 +131,44 @@ After the last command, you will be asked for your account credentials.
 
 ### 8. Miscellaneous Commands
 
-1. To see differences between commits first, see the commit number in the output of:
+- To see differences between commits first, see the commit number in the output of:
 
 $ git log --oneline
+b8e791f (HEAD -> master) newline test
+75d522c added some more
+38726ed (origin/master) added some lines
+d55f940 Initial Commit
+
+Then take the commit number which you want to compare. Differences show that the lines beginning with minus sign(-) are
+removed and the ones with plus sign(+) are added:
+
+```
+$ git diff 38726ed b8e791f
+diff --git a/git/git-notes-1.md b/git/git-notes-1.md
+index 1c38d1d..0e9c4b0 100644
+--- a/git/git-notes-1.md
++++ b/git/git-notes-1.md
+@@ -127,4 +127,10 @@ Then, on your terminal go to your git initiated project directory and issue thes
+ git remote add origin https://github.com/*your-github-username*/__test.git__
+ git push -u origin master
+
+-After the last command, you will be asked for your account credentials.
+\ No newline at end of file
++After the last command, you will be asked for your account credentials.
++
++### 8. Miscellaneous Commands
++
++1. To see differences between commits first, see the commit number in the output of:
++
++$ git log --oneline
+```
+
+- What is changed since last commit:
+
+```
+git diff HEAD
+```
+
+- How to see branching with graph-like console output:
+
+

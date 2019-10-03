@@ -20,15 +20,18 @@ $ git config --global user.mail "yourmail@example.com"
 
 This is going to be the committer ID (author) in the output of "git log"
 
+
 ### 2. Creating a git repo
 
 1. Change into working directory of your project which you are planning to do version controlling.
 1. Initiate git.
+    
 
 ```
 $ cd /var/www/html
 $ git init
 ```
+
 
 ### 3. Files to Track and Initial Commit
 
@@ -41,6 +44,7 @@ $ git rm -r --cached ./img
 $ git status  # shows the files to be ignored or to be staged
 $ git commit  -m "Initial Commit"
 ```
+
 
 ### 4. Recovering from Committed Mistakes
 
@@ -68,6 +72,7 @@ a611eb2 (HEAD) Revert "deleted a line accidentally test"
 ec6102e deleted a line accidentally test
 ```
 
+
 ### 5. Recovering from Uncommitted Mistakes
 
 To see changes since last commit till that moment:
@@ -78,15 +83,16 @@ And if there is a need to revoke all changes and revert to last commit:
 
 `$ git reset HEAD --hard`
 
+
 ### 6. Branch Related Commands
 
-_1. See branches before clone(fork)_
+###### _**1. See branches before clone(fork)**_
 ```
 $ git branch
 * master
 ```
 
-_2. To create a new_feature_branch from master repo and see the branches after the branch command:_
+###### _**2. To create a new_feature_branch from master repo and see the branches after the branch command:**_
 ```
 $ git branch new_feature_branch
 
@@ -97,7 +103,7 @@ $ git branch
 
 The preceding asterisk sign above shows that the master branch is active.
 
-_3. To activate the branch with name new_feature_branch:_
+**_3. To activate the branch with name new_feature_branch:_**
 ```
 $ git checkout new_feature_branch
 
@@ -147,6 +153,7 @@ git push -u origin master
 ```
 After the last command, you will be asked for your account credentials.
 
+
 ### 8. Miscellaneous Commands
 
 - To see differences between commits; first, see the commit number in the output of:
@@ -159,7 +166,8 @@ b8e791f (HEAD -> master) newline test
 d55f940 Initial Commit
 ```
 
-Then take the commit number which you want to compare. Differences show that the lines beginning with minus sign(-) are
+Then note down the commit numbers which you want to compare. Differences between those commits are shown belows.
+The output tells that the lines beginning with minus sign(-) are
 removed and the ones with plus sign(+) are added:
 
 ```
@@ -204,6 +212,7 @@ $ git log --graph --oneline --all
 * 38726ed (origin/master) added some lines
 * d55f940 Initial Commit
 ```
+
 
 ### 9. Version Controlling Terminology
 

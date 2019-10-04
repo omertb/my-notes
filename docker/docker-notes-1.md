@@ -5,7 +5,9 @@
   - [Exposing Ports](#exposing-ports)
   - [Linking Directly](#linking-directly)
   - [Private Network](#private-network)
-
+3. [Container Volumes](#container-volumes)
+  - [Sharing Data with the Host](#sharing-data-with-the-host)
+  - [Sharing Data Between Containers](#sharing-data-between-containers)
 
 ### 1. Basic Commands
 
@@ -22,7 +24,7 @@ Command | Description
 `$ docker run --name example -d ubuntu bash -c "cat /etc/passwd"` |  Runs the bash command (cat /etc/passwd) in the container named "example".
 `$ docker logs example` | Prints the output of the command in the created container above, that is, content of _/etc/passswd_.
 `$ docker rm example` | Deletes the container named _example_.
-`$ docker rmi my-ubuntu` | Deletes the images named _my-ubuntu_.
+`$ docker rmi my-ubuntu` | Deletes the image named _my-ubuntu_.
 
 > To detach container console without exiting, press **ctrl+p, then q**.
 ----
@@ -88,10 +90,41 @@ If you check the content of /etc/hosts in the container ***server***, there will
 
 - This is the way to make links not break.
 - This type of network has built in nameserver that fix the links.
-- The private network must be created in advance
+- The private network must be created in advance.
 
 ```
 $ docker network create example-net
 $ docker run --rm -ti --net=example-net --name server ubuntu bash
 $ docker run --rm -ti --link server --net=example-net --name client ubuntu bash
 ```
+
+----
+### 3. Container Volumes
+
+```
+Virtual Disks
+           └──> Persistent
+           └──> Ephemeral
+```
+
+#### Sharing Data with the Host
+- Persistent
+- Not part of images
+
+```
+$ mkdir ./example
+$ docker run -ti -v ~/local_host_dir:/container-dir ubuntu bash
+```
+#### Sharing Data Between Containers
+- Ephemeral
+- Exists as long as they are being used
+- Can be shared between containers
+
+```
+/* First start a container with volume to be shared. */
+$ docker run -ti --name first-container -v /container-vol-dir ubuntu bash
+/* Then start another container to reach that volume of the former one. */
+$ docker run -ti --volumes-from first-container ubuntu bash
+
+```
+

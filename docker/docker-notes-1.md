@@ -10,6 +10,7 @@
   - [Sharing Data Between Containers](#sharing-data-between-containers)
 4. [Transferring Docker Containers-Images as a File](#4-transferring-docker-containers-images-as-a-file)
 5. [Uploading an Image to Dockerhub](#5-uploading-an-image-to-dockerhub)
+6. [Some Troubleshooting](#6-some-troubleshooting)
 
 ### 1. Basic Commands
 
@@ -179,11 +180,11 @@ $ docker inspect <container-id-name> | grep Pid
 # finding out container ip address:
 $ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container-id-name>
 ```
-> In docker file, with RUN statement, add some cleaning commands to reduce image size:
+> __In docker file, with RUN statement, add some cleaning commands to reduce image size:__
 ```
 RUN apt-get update && apt-get install -y openssh-server && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ```
-> To change docker0 bridge IP network:
+> __To change docker0 bridge IP network:__
 ```
 $ systemctl stop docker
 $ ip link del docker0
@@ -193,11 +194,11 @@ $ sed -i 's/\-\-bip\=172.16.30.0\/24/\-\-bip\=10.10.10.0\/24/g' /etc/default/doc
 # DOCKER_OPTS includes --bip expression.
 
 $ systemctl start docker
-$ ip a  | see if IP address of docker0 is changed.
+$ ip a  # see if IP address of docker0 is changed.
 
 ```
-> Setting hostname and sending stdout of a container to  syslog server
-> _The Dockerfile for image of this container is available as "Dockerfile-Freeradius"._
+> __Setting hostname and sending stdout of a container to  syslog server.__
+> _The Dockerfile for image of this container is available as "Dockerfile-Freeradius"._:
 ```
 $ docker run -d --hostname freerad_server --name freerad_ct --log-driver syslog \\
     --log-opt syslog-address=udp://172.16.100.100:514 -p 172.16.0.10:21812:1812/udp myservices:radius

@@ -8,6 +8,8 @@
 3. [Container Volumes](#container-volumes)
   - [Sharing Data with the Host](#sharing-data-with-the-host)
   - [Sharing Data Between Containers](#sharing-data-between-containers)
+4. [Transferring Docker Containers-Images as a File](#4-transferring-docker-containers-images-as-a-file)
+5. [Uploading an Image to Dockerhub](#5-uploading-an-image-to-dockerhub)
 
 ### 1. Basic Commands
 
@@ -44,8 +46,10 @@ $ docker run -p 127.0.0.1:2222:22/tcp eg_sshd
 
 ##### _Ssh enabled container example:_
 ```
-$ docker run -d -P --name my-ssh-server eg_sshd
+$ docker run -d -P --name my-ssh-server eg_sshd  # -P exposes all ports
 $ docker exec -ti my-ssh-server passwd root
+$ docker port my-ssh-server  # see port mapping
+$ docker inspect my-ssh-server  # see ip configuration
 ```
 _Or ssh key login without password is possible:_
 ```
@@ -126,5 +130,76 @@ $ docker run -ti --name first-container -v /container-vol-dir ubuntu bash
 /* Then start another container to reach that volume of the former one. */
 $ docker run -ti --volumes-from first-container ubuntu bash
 
+```
+
+----
+### 4. Transferring Docker Containers-Images as a File
+Containers can be converted to images, be saved as a file,be transferred to somewhere else and be loaded there.
+
+The steps to implement those:
+1. Get the number or name of docker containers.
+2. Commit those containers as images.
+3. Save it to a tar file.
+4. Load it in another system running docker service.
+```
+$ docker ps -a
+CONTAINER ID  IMAGE        COMMAND     CREATED       STATUS                    PORTS NAMES
+ecac70d6c2aa  ubuntu       "/bin/bash" 8 weeks ago   Exited (0) 20 hours ago         upbeat_curran
+f08c0492d537  hello-world  "/hello"    7 months ago  Exited (0) 7 months ago         unruffled_einstein
+
+$ docker commit ecac70d6c2aa my-ubuntu
+$ docker commit f08c0492d537 my-greeting
+$ docker save -o /tmp/my-project.tar my-ubuntu my-greeting
+$ tar -tf /tmp/my-project.tar  # lists the content of tar file
+
+# transfer that file and load it in another system running docker service
+$ docker load -i my-project.tar
+$ docker images  # see if the project images are loaded
+```
+
+----
+### 5. Uploading an Image to Dockerhub
+1. First you should sign up for an account in docker hub (hub.docker.com).
+2. Then tag your image compliant with your docker hub account.
+3. Login, then push it!
+```
+$ docker tag f08c0492d537 omertb/helloworld:r1
+$ docker login
+$ docker push omertb/helloworld:r1
+```
+
+### 6. Some Troubleshooting
+```
+$ docker history <image-id-name>
+$ docker top <container-id-name>
+$ docker log <container-id-name>
+$ docker inspect <container-id-name> | grep Links
+$ docker inspect <container-id-name> | grep Pid
+
+# finding out container ip address:
+$ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container-id-name>
+```
+> In docker file, with RUN statement, add some cleaning commands to reduce image size:
+```
+RUN apt-get update && apt-get install -y openssh-server && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+```
+> To change docker0 bridge IP network:
+```
+$ systemctl stop docker
+$ ip link del docker0
+$ sed -i 's/\-\-bip\=172.16.30.0\/24/\-\-bip\=10.10.10.0\/24/g' /etc/default/docker
+
+# The above command finds the expression containing "--bip=172.16.30.0/24" and changes it to --bip=10.10.10.0/24
+# DOCKER_OPTS includes --bip expression.
+
+$ systemctl start docker
+$ ip a  | see if IP address of docker0 is changed.
+
+```
+> Setting hostname and sending stdout of a container to  syslog server
+> _The Dockerfile for image of this container is available as "Dockerfile-Freeradius"._
+```
+$ docker run -d --hostname freerad_server --name freerad_ct --log-driver syslog \\
+    --log-opt syslog-address=udp://172.16.100.100:514 -p 172.16.0.10:21812:1812/udp myservices:radius
 ```
 

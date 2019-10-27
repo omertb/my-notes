@@ -1,0 +1,24 @@
+## The ct_shared directory including freeradius config files should be in the same directory with this Dockerfile
+FROM debian:9.7
+
+RUN apt update && apt-get install -y openssh-server freeradius freeradius-ldap && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN mkdir /var/run/sshd
+RUN mkdir /var/run/freeradius
+RUN echo 'root:PASSWORD' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+COPY ct_shared/ /etc/freeradius/3.0/
+RUN chown -R freerad:freerad /etc/freeradius/3.0/*
+
+RUN ln -fs /usr/share/zoneinfo/Asia/Istanbul /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+
+EXPOSE 22 1812/udp
+
+CMD ["/usr/sbin/freeradius", "-f", "-l", "stdout"]

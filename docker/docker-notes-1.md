@@ -180,10 +180,12 @@ $ docker inspect <container-id-name> | grep Pid
 # finding out container ip address:
 $ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container-id-name>
 ```
+###
 > __In docker file, with RUN statement, add some cleaning commands to reduce image size:__
 ```
 RUN apt-get update && apt-get install -y openssh-server && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ```
+###
 > __To change docker0 bridge IP network:__
 ```
 $ systemctl stop docker
@@ -197,6 +199,7 @@ $ systemctl start docker
 $ ip a  # see if IP address of docker0 is changed.
 
 ```
+###
 > __Setting hostname and sending stdout of a container to  syslog server.__
 > _The Dockerfile for image of this container is available as "Dockerfile-Freeradius"._:
 ```

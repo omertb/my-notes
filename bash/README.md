@@ -13,7 +13,7 @@ $ for file in *.config; do mv "$file" "${file/running.config/.conf}"; done
 $ find . -mtime +730 -type f -name "@*" -print
 $ find . -mtime +730 -type f -name "@*" -delete
 
-Print and delete files  older than 60 days and those are beginning with "dhcpd" and ending with "conf":
+# Print and delete files  older than 60 days and those are beginning with "dhcpd" and ending with "conf":
 $ find . -mtime +60 -type f -name "dhcpd*conf" -print
 $ find . -mtime +60 -type f -name "dhcpd*conf" -delete
 
@@ -31,7 +31,7 @@ Your root partition remaining free space is critically low. Used: $CURRENT%
 EOF
 fi
 ```
-*Validated for Ubuntu
+* Validated for Ubuntu
 ```Shell
 #!/bin/bash
 CURRENT=$(df / | grep / | awk '{ print $5}' | sed 's/%//g')

@@ -7,8 +7,9 @@
 5. [Recovering from Uncommitted Mistakes](#5-recovering-from-uncommitted-mistakes)
 6. [Branch Related Commands](#6-branch-related-commands)
 7. [Github Push](#7-github-push)
-8. [Miscellaneous Commands](#8-miscellaneous-commands)
-9. [Version Controlling Terminology](#9-version-controlling-terminology)
+8. [Delete Commit History](#8-delete-commit-history)
+9. [Miscellaneous Commands](#9-miscellaneous-commands)
+10. [Version Controlling Terminology](#10-version-controlling-terminology)
 
 ----
 ### 1. Identifying yourself to git
@@ -147,13 +148,32 @@ First, create a repository on your github account, for instance say it "*test*".
 Then, on your terminal go to your git initiated project directory and issue these commands:
 
 ```
-git remote add origin https://github.com/*your-github-username*/__test.git__
+git remote add origin https://github.com/GITHUB_USERNAME/GITHUB_REPO_NAME.git__
 git push -u origin master
 ```
 After the last command, you will be asked for your account credentials.
+> To view configure remote repo enter `git remote -v`.
+
 
 ----
-### 8. Miscellaneous Commands
+### 8. Delete Commit History
+```bash
+# create and checkout to a new branch
+$ git checkout --orphan TEMP
+
+# commit all files
+$ git add <FILES>
+$ git commit -am "Initial Commit"
+
+# delete master branch and rename current branch as master, then push to the remote repo
+$ git branch -D master
+$ git branch -m master
+$ git push -f origin master
+```
+
+
+----
+### 9. Miscellaneous Commands
 
 - ###### To see differences between commits; first, see the commit number in the output of:
 
@@ -235,7 +255,7 @@ $ git log --oneline
 > ###### Everything is right now!
 
 ----
-### 9. Version Controlling Terminology
+### 10. Version Controlling Terminology
 
 **Term** | **Description**
 --- | ---
@@ -245,4 +265,5 @@ $ git log --oneline
 **tag/label** | _name a specific state of a repository_
 **branch/fork** | _make a clone of a repository_
 **merge** | _integrate a branch (clone) back into the master repo (main branch)_
+
 

@@ -42,4 +42,8 @@ Your root partition remaining free space is critically low. Used: $CURRENT%
 EOF
 fi
 ```
+#### Squeeze Whitespaces and Sort According to a Column
+```Shell
+$ cat last_sessions_file.txt | grep M | tr -s ' ' | sort -k7 -n
 
+```

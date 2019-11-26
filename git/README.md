@@ -253,6 +253,11 @@ $ git log --oneline
 0833522 some more formatting
 ```
 > ###### Everything is right now!
+#
+#### Remove all .DS_Store in subdirectories from being tracked
+```
+find . -name .DS_Store -print0 | xargs -0 git rm --cached --ignore-unmatch
+```
 
 ----
 ### 10. Version Controlling Terminology

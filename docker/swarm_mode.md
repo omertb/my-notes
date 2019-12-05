@@ -1,4 +1,4 @@
-(source: https://www.katacoda.com/courses/docker-production/getting)
+(source: https://www.katacoda.com/courses/docker-production)
 ### 1 - Create Swarm Mode Cluster
 
 Swarm Mode is built into the Docker CLI. You can find an overview the possibility commands via `docker swarm --help

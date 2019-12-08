@@ -132,3 +132,46 @@ available to outside of the cluster and viewable at https://2886795372-8443-elsy
 
 >For production, instead of externalIPs, it's recommended to use `kubectl proxy to access the dashboard. 
 See more details at [https://github.com/kubernetes/dashboard](https://github.com/kubernetes/dashboard.).
+
+### 6 - Creating a Deployment, Starting a Container
+
+```
+$ kubectl run http --image=katacoda/docker-http-server:latest --replicas=1
+$ kubectl get deployments  # view status of deployments
+$ kubectl describe deployment http  # view how many replicas are available,
+## labels specified and the events associated with the deploymen
+```
+
+### 7 - Exposing a Port
+
+* Use the following command to expose the container port 80 on the host 8000 binding to the external-ip of the host.
+```
+# kubectl expose deployment http --external-ip="172.17.0.72" --port=8000 --target-port=80
+```
+> With kubectl run it's possible to create the deployment and expose it as a single command.
+
+* Use the command below to create a second http service exposed on port 8001.
+```
+kubectl run httpexposed --image=katacoda/docker-http-server:latest --replicas=1 --port=80 --hostport=8001
+```
+
+>Under the covers, this exposes the Pod via Docker Port Mapping. As a result, you will not see the service listed using:
+`kubectl get svc
+
+> To find the details you can use `docker ps | grep httpexposed`
+
+#### Pause Containers
+Running the above command you'll notice the ports are exposed on the Pod, not the http container itself.
+The Pause container is responsible for defining the network for the Pod. Other containers in the pod share the same
+network namespace. This improves network performance and allow multiple containers to communicate over the same
+network interface.
+
+### 8 - Scale Containers
+
+The command kubectl scale allows us to adjust the number of Pods running for a particular deployment or replication
+controller.
+```
+$ kubectl scale --replicas=3 deployment http
+$ kubectl get pods
+$ kubectl describe svc http  # view the endpoint and the associated Pods which are included.
+```

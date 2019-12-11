@@ -142,7 +142,7 @@ $ kubectl describe deployment http  # view how many replicas are available,
 ## labels specified and the events associated with the deploymen
 ```
 
-### 7 - Exposing a Port
+#### 6.1 - Exposing a Port
 
 * Use the following command to expose the container port 80 on the host 8000 binding to the external-ip of the host.
 ```
@@ -166,7 +166,7 @@ The Pause container is responsible for defining the network for the Pod. Other c
 network namespace. This improves network performance and allow multiple containers to communicate over the same
 network interface.
 
-### 8 - Scale Containers
+#### 6.2 - Scale Containers
 
 The command kubectl scale allows us to adjust the number of Pods running for a particular deployment or replication
 controller.
@@ -175,3 +175,100 @@ $ kubectl scale --replicas=3 deployment http
 $ kubectl get pods
 $ kubectl describe svc http  # view the endpoint and the associated Pods which are included.
 ```
+
+### 7 - Deploy Containers Using YAML
+
+#### 7.1 - Create Deployment
+
+* Copy the following to a file named deployment.yaml to run _webapp1_ using the Docker Image katacoda/docker-http-server
+that runs on Port 80.
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp1
+    spec:
+      containers:
+      - name: webapp1
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+```
+This is deployed to the cluster with the command:
+
+`$ kubectl create -f deployment.yaml`
+
+As it's a Deployment object, a list of all the deployed objects can be obtained via:
+ 
+`$ kubectl get deployment`
+
+Details of individual deployments can be outputted with:
+
+`kubectl describe deployment webapp1`
+
+#### 7.2 - Create Service
+
+The Service selects all applications with the label webapp1. As multiple replicas, or instances, are deployed,
+they will be automatically load balanced based on this common label. The Service makes the application available
+via a NodePort:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-svc
+  labels:
+    app: webapp1
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30080
+  selector:
+    app: webapp1
+```
+
+Deploy the Service with `$ kubectl create -f service.yaml`
+
+
+As before, details of all the Service objects deployed with `kubectl get svc`. 
+
+By describing the object it's possible to discover more details about the configuration:
+```
+$ kubectl describe svc webapp1-svc
+$ curl host01:30080
+```
+
+#### 7.3 - Scale Deployment
+
+Update the deployment.yaml file to increase the number of instances running.
+For example, the file should look like this:
+
+> replicas: 4
+
+* Updates to existing definitions are applied using _kubectl apply_. To scale the number of replicas, deploy
+the updated YAML file using:
+```
+$ kubectl apply -f deployment.yaml
+```
+
+* Instantly, the desired state of our cluster has been updated, viewable with:
+```
+$ kubectl get deployment
+```
+
+Additional Pods will be scheduled to match the request:
+```
+$ kubectl get pods
+```
+
+> As all the Pods have the same label selector, they'll be load balanced behind the Service NodePort deployed.
+
+* Issuing requests to the port will result in different containers processing the request `curl host01:30080`

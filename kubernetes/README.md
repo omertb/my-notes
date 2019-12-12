@@ -272,3 +272,307 @@ $ kubectl get pods
 > As all the Pods have the same label selector, they'll be load balanced behind the Service NodePort deployed.
 
 * Issuing requests to the port will result in different containers processing the request `curl host01:30080`
+
+### 8 - Networking
+
+#### 8.1 - Cluster IP
+
+> Cluster IP is the default approach when creating a Kubernetes Service. The service is allocated an internal IP that
+other components can use to access the pods.
+
+By having a single IP address it enables the service to be load balanced across multiple Pods.
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-clusterip-svc
+  labels:
+    app: webapp1-clusterip
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: webapp1-clusterip
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-clusterip-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-clusterip
+    spec:
+      containers:
+      - name: webapp1-clusterip-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+```
+> This definition will deploy a web app with two replicas to showcase load balancing along with a service.
+```
+master $ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+webapp1-clusterip-deployment-669c7c65c4-d9b9g   1/1     Running   0          2m18s
+webapp1-clusterip-deployment-669c7c65c4-j6xwd   1/1     Running   0          2m18s
+
+master $ kubectl get svc
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+kubernetes              ClusterIP   10.96.0.1        <none>        443/TCP   2m17s
+webapp1-clusterip-svc   ClusterIP   10.106.180.198   <none>        80/TCP    56s
+```
+
+* After deploying, the service can be accessed via the ClusterIP allocated:
+
+```shell
+export CLUSTER_IP=$(kubectl get services/webapp1-clusterip-svc -o go-template='{{(index .spec.clusterIP)}}')
+echo CLUSTER_IP=$CLUSTER_IP
+curl $CLUSTER_IP:80
+```
+
+#### 8.2 - Target Port
+
+> Target ports allows us to separate the port the service is available on from the port the application is listening on.
+TargetPort is the Port which the application is configured to listen on. Port is how the application will be accessed
+from the outside.
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-clusterip-targetport-svc
+  labels:
+    app: webapp1-clusterip-targetport
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+  selector:
+    app: webapp1-clusterip-targetport
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-clusterip-targetport-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-clusterip-targetport
+    spec:
+      containers:
+      - name: webapp1-clusterip-targetport-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+```
+
+```
+master $ kubectl get svc
+NAME                               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes                         ClusterIP   10.96.0.1        <none>        443/TCP    7m5s
+webapp1-clusterip-targetport-svc   ClusterIP   10.102.82.108    <none>        8080/TCP   2s
+```
+* After the service and pods have deployed, it can be accessed via the cluster IP as before, but this time on the
+defined port 8080.
+
+#### 8.3 - NodePort
+
+> While TargetPort and ClusterIP make it available to inside the cluster, the NodePort exposes the service on each
+Node’s IP via the defined static port. No matter which Node within the cluster is accessed, the service will be
+reachable based on the port number defined.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-nodeport-svc
+  labels:
+    app: webapp1-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30080
+  selector:
+    app: webapp1-nodeport
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-nodeport-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-nodeport
+    spec:
+      containers:
+      - name: webapp1-nodeport-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+```
+
+```
+master $ kubectl get svc
+NAME                               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes                         ClusterIP   10.96.0.1        <none>        443/TCP        9m38s
+webapp1-nodeport-svc               NodePort    10.98.13.126     <none>        80:30080/TCP   3s
+```
+
+The service can now be reached via the Node's IP address on the NodePort defined.
+
+```shell
+master $ curl 172.17.0.29:30080
+<h1>This request was processed by host: webapp1-nodeport-deployment-677bd89b96-kst4b</h1>
+master $ curl 172.17.0.29:30080
+<h1>This request was processed by host: webapp1-nodeport-deployment-677bd89b96-srksr</h1>
+```
+
+#### 8.4 - External IPs
+> Another approach to making a service available outside of the cluster is via External IP addresses.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-externalip-svc
+  labels:
+    app: webapp1-externalip
+spec:
+  ports:
+  - port: 80
+  externalIPs:
+  - HOSTIP
+  selector:
+    app: webapp1-externalip
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-externalip-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-externalip
+    spec:
+      containers:
+      - name: webapp1-externalip-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+```
+
+* Update the definition to the current cluster's IP address with:
+
+```shell
+master $ sed -i 's/HOSTIP/172.17.0.29/g' externalip.yaml
+master $ kubectl apply -f externalip.yaml
+master $ kubectl get svc
+NAME                               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes                         ClusterIP   10.96.0.1        <none>        443/TCP        13m
+webapp1-externalip-svc             ClusterIP   10.99.87.109     172.17.0.29   80/TCP         2s
+webapp1-nodeport-svc               NodePort    10.98.13.126     <none>        80:30080/TCP   4m7s
+master $ curl 172.17.0.29
+<h1>This request was processed by host: webapp1-externalip-deployment-6446b488f8-6lr2x</h1>
+master $ curl 172.17.0.29
+<h1>This request was processed by host: webapp1-externalip-deployment-6446b488f8-r6h9g</h1>
+```
+
+#### 8.5 - Load Balancer
+
+> When running in the cloud, such as EC2 or Azure, it's possible to configure and assign a Public IP address issued
+via the cloud provider. This will be issued via a Load Balancer such as ELB. This allows additional public IP addresses
+to be allocated to a Kubernetes cluster without interacting directly with the cloud provider.
+
+* As Katacoda is not a cloud provider, it's still possible to dynamically allocate IP addresses to LoadBalancer
+type services. This is done by deploying the Cloud Provider using
+`kubectl apply -f cloudprovider.yaml` (see the file as named as same in this dir)[./cloudprovider.yaml].
+When running in a service provided by a Cloud Provider this is not required.
+
+* When a service requests a Load Balancer, the provider will allocate one from the 10.10.0.0/26 range defined in the
+configuration.
+
+> see the pods named keepalived below, after applied cloudprovider.yaml
+
+```
+master $ kubectl get pods -n kube-system
+NAME                                        READY   STATUS    RESTARTS   AGE
+coredns-fb8b8dccf-4tcwg                     1/1     Running   0          22m
+coredns-fb8b8dccf-tm9xp                     1/1     Running   0          22m
+etcd-master                                 1/1     Running   0          21m
+keepalived-cloud-provider-78fc4468b-9dq64   1/1     Running   0          4m49s
+kube-apiserver-master                       1/1     Running   0          21m
+kube-controller-manager-master              1/1     Running   0          21m
+kube-keepalived-vip-dc45m                   1/1     Running   0          4m49s
+kube-proxy-xpz5l                            1/1     Running   0          22m
+kube-scheduler-master                       1/1     Running   0          21m
+weave-net-cl6m4                             2/2     Running   0          22m
+
+master $ kubectl apply -f loadbalancer.yaml
+```
+* _The service is configured via a Load Balancer as defined in:_
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-loadbalancer-svc
+  labels:
+    app: webapp1-loadbalancer
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: webapp1-loadbalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1-loadbalancer-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webapp1-loadbalancer
+    spec:
+      containers:
+      - name: webapp1-loadbalancer-pod
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+---
+```
+
+```
+master $ kubectl get svc
+NAME                               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes                         ClusterIP      10.96.0.1        <none>        443/TCP        26m
+webapp1-externalip-svc             ClusterIP      10.99.87.109     172.17.0.29   80/TCP         12m
+webapp1-loadbalancer-svc           LoadBalancer   10.98.66.206     10.10.0.1     80:30964/TCP   101s
+webapp1-nodeport-svc               NodePort       10.98.13.126     <none>        80:30080/TCP   16m
+```
+* The service can now be accessed via the IP address assigned, in this case from the 10.10.0.0/26 range.
+
+```shell
+master $ export LoadBalancerIP=$(kubectl get services/webapp1-loadbalancer-svc -o go-template='{{(index .status.loadBalancer.ingress 0).ip}}')
+master $ echo LoadBalancerIP=$LoadBalancerIP
+LoadBalancerIP=10.10.0.1
+master $ curl $LoadBalancerIP
+<h1>This request was processed by host: webapp1-loadbalancer-deployment-f45b8d9cd-p2k6d</h1>
+master $ curl $LoadBalancerIP
+<h1>This request was processed by host: webapp1-loadbalancer-deployment-f45b8d9cd-c5pqw</h1>
+```
+
